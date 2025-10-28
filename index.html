@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>申請フォーム起動プラットフォーム</title>
+  <meta name="description" content="休暇届・残業届・購入予定品のGoogleフォームをスマホからワンタップで開くための簡易ポータルです。">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+  <!-- Tailwind CSS via CDN (no build needed) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <main class="max-w-3xl mx-auto p-6">
+    <header class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight">申請フォーム起動プラットフォーム</h1>
+      <p class="text-slate-600 mt-2">
+        次のいずれかを選択してください： <strong>1) 休暇届</strong>、<strong>2) 残業届</strong>、<strong>3) 購入予定品</strong>
+      </p>
+    </header>
+
+    <!-- 入力での選択 -->
+    <form id="form" class="mb-6" onsubmit="return handleSubmit(event)">
+      <label for="selector" class="block text-sm font-medium text-slate-700 mb-2">数字入力（1/2/3）</label>
+      <div class="flex gap-2 items-center">
+        <input
+          id="selector"
+          inputmode="numeric"
+          pattern="[1-3]"
+          placeholder="例: 1"
+          class="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 focus:outline-none focus:ring-4 focus:ring-indigo-300 shadow-sm"
+          aria-describedby="selector-help"
+        />
+        <button
+          type="submit"
+          class="rounded-xl px-5 py-3 font-semibold shadow-md hover:shadow-lg transition focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-300 bg-indigo-600 text-white"
+        >
+          開く
+        </button>
+      </div>
+      <p id="selector-help" class="mt-2 text-xs text-slate-500">Enter キーでも実行できます。</p>
+      <p id="error" class="mt-2 text-sm text-red-600 hidden">1・2・3 のいずれかを入力してください。</p>
+    </form>
+
+    <!-- ボタンでの選択 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <button
+        class="w-full rounded-2xl px-5 py-4 shadow-md hover:shadow-lg transition focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-300 bg-white border border-slate-200 text-left"
+        onclick="openForm(1)"
+        aria-label="1. 休暇届"
+      >
+        <div class="text-lg font-semibold">1. 休暇届</div>
+        <div class="text-sm text-slate-600 mt-0.5">休暇申請フォームを開きます</div>
+      </button>
+
+      <button
+        class="w-full rounded-2xl px-5 py-4 shadow-md hover:shadow-lg transition focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-300 bg-white border border-slate-200 text-left"
+        onclick="openForm(2)"
+        aria-label="2. 残業届"
+      >
+        <div class="text-lg font-semibold">2. 残業届</div>
+        <div class="text-sm text-slate-600 mt-0.5">残業申請フォームを開きます</div>
+      </button>
+
+      <button
+        class="w-full rounded-2xl px-5 py-4 shadow-md hover:shadow-lg transition focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-indigo-300 bg-white border border-slate-200 text-left"
+        onclick="openForm(3)"
+        aria-label="3. 購入予定品"
+      >
+        <div class="text-lg font-semibold">3. 購入予定品</div>
+        <div class="text-sm text-slate-600 mt-0.5">購入予定品の申請フォームを開きます</div>
+      </button>
+    </div>
+
+    <footer class="mt-8 text-xs text-slate-500">
+      <p>※ 各ボタンは新しいタブでGoogleフォームを開きます。ブロックされた場合は、ポップアップを許可してください。</p>
+    </footer>
+  </main>
+
+  <script>
+    const LINKS = {
+      1: "https://docs.google.com/forms/d/e/1FAIpQLSeal-78o16Ym_gvSUwj-NDtXMmFUHBW5gI-kvsdsDpdJuHdww/viewform?usp=header",
+      2: "https://docs.google.com/forms/d/e/1FAIpQLSdob2maVsK4R4h82B2OSLTImCHVh_-DXkJGhpVxQaiK1_ueMw/viewform?usp=header",
+      3: "https://docs.google.com/forms/d/e/1FAIpQLSfCTyQGDJ1oW7RjYyGBaVyGe3qBe2YZjNeLjTcF882vPHS7DQ/viewform?usp=header",
+    };
+
+    function openForm(k){
+      const url = LINKS[k];
+      if(!url) return;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function handleSubmit(e){
+      if(e) e.preventDefault();
+      const v = (document.getElementById("selector").value || "").trim();
+      const err = document.getElementById("error");
+      if(["1","2","3"].includes(v)){
+        err.classList.add("hidden");
+        openForm(parseInt(v,10));
+      }else{
+        err.classList.remove("hidden");
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>
